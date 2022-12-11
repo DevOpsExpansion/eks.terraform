@@ -7,13 +7,12 @@ variable "namespace" {
 }
 
 variable "chart_version" {
-  type = string
+  type    = string
+  default = "2.3.4"
 }
 
-variable "values" {
-  description = "Values in yamlencoded map (string) format to be passed to Helm."
-  type        = string
-  default     = ""
+variable "oidc_provider_arn" {
+  type = string
 }
 
 variable "dist" {

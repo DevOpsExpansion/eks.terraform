@@ -1,3 +1,8 @@
+locals {
+  repo       = "https://grafana.github.io/helm-charts"
+  chart_name = "grafana"
+}
+
 resource "helm_release" "grafana" {
   repository = local.repo
   chart      = local.chart_name
@@ -6,32 +11,7 @@ resource "helm_release" "grafana" {
   name             = var.name
   namespace        = var.namespace
   create_namespace = true
-
-  values = [yamlencode({
-    ingress = {
-      enabled          = var.ingress.enabled
-      ingressClassName = var.ingress.class_name
-      annotations      = var.ingress.annotations
-      hosts            = var.ingress.hosts
-      path             = var.ingress.path
-    }
-    env = {
-      GF_SERVER_ROOT_URL            = "/grafana"
-      GF_SERVER_SERVE_FROM_SUB_PATH = "true"
-    }
-    datasources = {
-      "datasources.yaml" = {
-        apiVersion = 1
-        datasources = [{
-          name      = "Prometheus"
-          type      = "prometheus"
-          url       = "http://prometheus-server.monitoring.svc.cluster.local/prometheus"
-          access    = "proxy"
-          isDefault = true
-        }]
-      }
-    }
-  })]
+  values           = [var.values]
 }
 
 module "dist" {

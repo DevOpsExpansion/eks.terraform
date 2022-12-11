@@ -1,9 +1,9 @@
 locals {
-  repo       = "https://prometheus-community.github.io/helm-charts"
-  chart_name = "prometheus"
+  repo       = "https://kubernetes-sigs.github.io/aws-efs-csi-driver/"
+  chart_name = "aws-efs-csi-driver"
 }
 
-resource "helm_release" "prometheus" {
+resource "helm_release" "efs_csi_driver" {
   repository = local.repo
   chart      = local.chart_name
   version    = var.chart_version
@@ -11,9 +11,6 @@ resource "helm_release" "prometheus" {
   name             = var.name
   namespace        = var.namespace
   create_namespace = true
-  wait             = false
-
-  values = [var.values]
 }
 
 module "dist" {
@@ -21,7 +18,7 @@ module "dist" {
   count  = var.dist ? 1 : 0
 
   path    = "${path.module}/dist"
-  trigger = helm_release.prometheus.version
+  trigger = helm_release.efs_csi_driver.version
 
   repo          = local.repo
   chart_name    = local.chart_name

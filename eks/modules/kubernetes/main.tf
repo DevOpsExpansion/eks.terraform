@@ -51,30 +51,39 @@ module "eks" {
 
   eks_managed_node_groups = {
 
-    medium_spot = {
+    services = {
       create_launch_template = false
       launch_template_name   = ""
 
-      desired_size = 4
-      min_size     = 3
-      max_size     = 6
+      desired_size = 3
+      min_size     = 2
+      max_size     = 5
 
       instance_types = ["t2.medium"]
       capacity_type  = "SPOT"
     }
+
+    apps = {
+      desired_size = 1
+      min_size     = 0
+      max_size     = 4
+
+      instance_types = ["t2.micro"]
+      capacity_type  = "SPOT"
+    }
   }
 
-  #   # Fargate Profile(s)
-  #   fargate_profiles = {
-  #     default = {
-  #       name = "default"
-  #       selectors = [
-  #         {
-  #           namespace = "default"
-  #         }
-  #       ]
-  #     }
-  #   }
+  # Fargate Profile(s)
+  fargate_profiles = {
+    default = {
+      name = "default"
+      selectors = [
+        {
+          namespace = "default"
+        }
+      ]
+    }
+  }
 
   #   # aws-auth configmap
   #   manage_aws_auth_configmap = true
