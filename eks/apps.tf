@@ -1,10 +1,11 @@
 module "autoscaler" {
   source = "./apps/autoscaler"
 
-  name      = "autoscaler"
-  namespace = "autoscaling"
+  name          = "autoscaler"
+  namespace     = "autoscaling"
+  chart_version = "9.21.0"
 
-  cluster_id        = module.cluster.cluster_id
+  cluster_name      = module.cluster.cluster_name
   oidc_provider_arn = module.cluster.oidc_provider_arn
 }
 
@@ -114,6 +115,7 @@ module "grafana" {
   dist = true
 
   depends_on = [
-    module.ingress
+    module.ingress,
+    module.prometheus
   ]
 }

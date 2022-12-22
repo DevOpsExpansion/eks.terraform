@@ -1,7 +1,13 @@
+locals {
+  repo                    = "https://kubernetes.github.io/autoscaler"
+  chart_name              = "cluster-autoscaler"
+  k8s_serviceaccount_name = "cluster-autoscaler"
+}
+
 resource "helm_release" "autoscaler" {
-  repository = "https://kubernetes.github.io/autoscaler"
-  chart      = "cluster-autoscaler"
-  version    = "9.21.0"
+  repository = local.repo
+  chart      = local.chart_name
+  version    = var.chart_version
 
   name             = var.name
   namespace        = var.namespace
@@ -9,6 +15,9 @@ resource "helm_release" "autoscaler" {
 
   values = [
     yamlencode({
+      autoDiscovery = {
+        clusterName = var.cluster_name
+      }
       rbac = {
         serviceAccount = {
           create                       = true
@@ -21,9 +30,4 @@ resource "helm_release" "autoscaler" {
       }
     })
   ]
-
-  set {
-    name  = "autoDiscovery.clusterName"
-    value = var.cluster_id
-  }
 }

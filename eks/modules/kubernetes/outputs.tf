@@ -1,5 +1,5 @@
-output "cluster_id" {
-  value = module.eks.cluster_id
+output "cluster_name" {
+  value = module.eks.cluster_name
 }
 
 output "cluster_endpoint" {
@@ -12,4 +12,8 @@ output "cluster_certificate_authority_data" {
 
 output "oidc_provider_arn" {
   value = module.eks.oidc_provider_arn
+}
+
+output "eks_managed_node_groups" {
+  value = module.eks.eks_managed_node_groups
 }

@@ -14,11 +14,11 @@ terraform {
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = "4.37.0"
+      version = "4.46.0"
     }
     kubernetes = {
       source  = "hashicorp/kubernetes"
-      version = "2.14.0"
+      version = "2.16.1"
     }
     helm = {
       source  = "hashicorp/helm"
@@ -64,7 +64,7 @@ provider "kubernetes" {
       "--profile",
       local.aws_profile,
       "--cluster-name",
-      module.cluster.cluster_id,
+      module.cluster.cluster_name,
     ]
   }
 }
@@ -86,7 +86,7 @@ provider "helm" {
         "--profile",
         local.aws_profile,
         "--cluster-name",
-        module.cluster.cluster_id,
+        module.cluster.cluster_name,
       ]
     }
   }

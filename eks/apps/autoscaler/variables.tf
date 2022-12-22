@@ -6,7 +6,11 @@ variable "namespace" {
   type = string
 }
 
-variable "cluster_id" {
+variable "chart_version" {
+  type = string
+}
+
+variable "cluster_name" {
   type = string
 }
 

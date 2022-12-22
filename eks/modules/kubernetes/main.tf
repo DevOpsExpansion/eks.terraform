@@ -1,6 +1,6 @@
 module "eks" {
   source  = "terraform-aws-modules/eks/aws"
-  version = "18.30.3"
+  version = "19.0.4"
 
   cluster_name    = var.cluster_name
   cluster_version = "1.23"
@@ -14,30 +14,24 @@ module "eks" {
   enable_irsa = true
   cluster_addons = {
     aws-ebs-csi-driver = {
-      version                  = "v1.13.0-eksbuild.2"
-      resolve_conflicts        = "OVERWRITE"
+      most_recent              = true
       service_account_role_arn = module.ebs_csi_irsa.iam_role_arn
     }
     coredns = {
-      version           = "v1.8.7-eksbuild.3"
-      resolve_conflicts = "OVERWRITE"
+      most_recent = true
     }
     kube-proxy = {
-      version           = "v1.23.13-eksbuild.2"
-      resolve_conflicts = "OVERWRITE"
+      most_recent = true
     }
     vpc-cni = {
-      version                  = "v1.10.4-eksbuild.1"
-      resolve_conflicts        = "OVERWRITE"
+      most_recent              = true
       service_account_role_arn = module.vpc_cni_irsa.iam_role_arn
     }
-
   }
 
-  cluster_encryption_config = [{
-    provider_key_arn = aws_kms_key.eks.arn
-    resources        = ["secrets"]
-  }]
+  cluster_encryption_config = {
+    resources = ["secrets"]
+  }
 
 
   # EKS Managed Node Group(s)
@@ -52,10 +46,9 @@ module "eks" {
   eks_managed_node_groups = {
 
     services = {
-      create_launch_template = false
-      launch_template_name   = ""
+      name = "services"
 
-      desired_size = 3
+      desired_size = 2
       min_size     = 2
       max_size     = 5
 
@@ -64,11 +57,13 @@ module "eks" {
     }
 
     apps = {
+      name = "apps"
+
       desired_size = 1
-      min_size     = 0
+      min_size     = 1
       max_size     = 4
 
-      instance_types = ["t2.micro"]
+      instance_types = ["t2.medium"]
       capacity_type  = "SPOT"
     }
   }
