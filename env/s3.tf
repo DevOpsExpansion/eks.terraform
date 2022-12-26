@@ -2,7 +2,7 @@ module "frontend" {
   source  = "terraform-aws-modules/s3-bucket/aws"
   version = "3.6.0"
 
-  bucket        = "${var.prefix}-${var.name}-frontend"
+  bucket_prefix = "${var.name}-${var.prefix}-frontend"
   force_destroy = true
 
   attach_policy = true

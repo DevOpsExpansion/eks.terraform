@@ -47,10 +47,10 @@ module "eks" {
 
     services = {
       name = "services"
+      # use_name_prefix        = false
 
-
-      desired_size = 2
-      min_size     = 2
+      desired_size = 1
+      min_size     = 1
       max_size     = 5
 
       instance_types = ["t2.medium"]
@@ -59,6 +59,7 @@ module "eks" {
 
     apps = {
       name = "apps"
+      # use_name_prefix        = false
 
       desired_size = 1
       min_size     = 1

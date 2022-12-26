@@ -12,5 +12,5 @@ resource "helm_release" "nginx" {
   namespace        = var.namespace
   create_namespace = true
 
-  timeout = 6000
+  timeout = 600
 }
