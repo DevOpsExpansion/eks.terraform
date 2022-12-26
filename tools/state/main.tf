@@ -1,7 +1,6 @@
 module "state_bucket" {
-  # https://registry.terraform.io/modules/terraform-aws-modules/s3-bucket/aws/3.2.1
   source  = "terraform-aws-modules/s3-bucket/aws"
-  version = "3.5.0"
+  version = "3.6.0"
 
   bucket = "terraform-${data.aws_caller_identity.this.account_id}"
 

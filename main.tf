@@ -14,7 +14,11 @@ terraform {
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = "4.46.0"
+      version = "4.48.0"
+    }
+    github = {
+      source  = "integrations/github"
+      version = "5.12.0"
     }
     kubernetes = {
       source  = "hashicorp/kubernetes"
@@ -22,14 +26,16 @@ terraform {
     }
     helm = {
       source  = "hashicorp/helm"
-      version = "2.7.1"
+      version = "2.8.0"
     }
   }
 }
 
 provider "aws" {
-  region  = local.aws_region
-  profile = local.aws_profile
+  region = local.aws_region
+  # profile    = local.aws_profile
+  access_key = module.dotenv.result.AWS_ACCESS_KEY_ID
+  secret_key = module.dotenv.result.AWS_SECRET_ACCESS_KEY
 
   default_tags {
     tags = local.aws_default_tags
@@ -39,13 +45,20 @@ provider "aws" {
 # Created for ACM certificates
 # CloudFront supports US East (N. Virginia) Region only.
 provider "aws" {
-  region  = local.aws_region
-  profile = local.aws_profile
-  alias   = "virginia"
+  region = local.aws_region
+  # profile    = local.aws_profile
+  access_key = module.dotenv.result.AWS_ACCESS_KEY_ID
+  secret_key = module.dotenv.result.AWS_SECRET_ACCESS_KEY
+  alias      = "virginia"
 
   default_tags {
     tags = local.aws_default_tags
   }
+}
+
+provider "github" {
+  owner = "DevOpsExpansion"
+  token = module.dotenv.result.GITHUB_TOKEN
 }
 
 provider "kubernetes" {
@@ -92,6 +105,11 @@ provider "helm" {
   }
 }
 
+module "dotenv" {
+  source = "./tools/dotenv"
+
+  filepath = "${path.root}/.env"
+}
 
 data "aws_region" "this" {}
 data "aws_caller_identity" "this" {}

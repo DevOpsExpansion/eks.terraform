@@ -1,7 +1,6 @@
 module "vpn_security_group" {
-  # https://registry.terraform.io/modules/terraform-aws-modules/security-group/aws/4.9.0
   source  = "terraform-aws-modules/security-group/aws"
-  version = "4.9.0"
+  version = "4.16.2"
 
   name        = "${var.name}-OpenVPN"
   description = "OpenVPN access security group"

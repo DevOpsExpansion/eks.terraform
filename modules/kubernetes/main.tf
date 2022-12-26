@@ -1,6 +1,6 @@
 module "eks" {
   source  = "terraform-aws-modules/eks/aws"
-  version = "19.0.4"
+  version = "19.4.2"
 
   cluster_name    = var.cluster_name
   cluster_version = "1.23"
@@ -47,6 +47,7 @@ module "eks" {
 
     services = {
       name = "services"
+
 
       desired_size = 2
       min_size     = 2

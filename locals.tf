@@ -1,7 +1,7 @@
 locals {
   name = "demo"
 
-  aws_region  = "us-east-1"
+  aws_region  = module.dotenv.result.AWS_REGION
   aws_profile = "sandbox"
 
   aws_default_tags = {

@@ -1,6 +1,6 @@
 module "autoscaler_irsa" {
   source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
-  version = "5.8.0"
+  version = "5.9.2"
 
   role_name_prefix                 = "autoscaler-irsa"
   attach_cluster_autoscaler_policy = true

@@ -1,5 +1,4 @@
 module "vpc" {
-  # https://registry.terraform.io/modules/terraform-aws-modules/vpc/aws/3.18.1
   source  = "terraform-aws-modules/vpc/aws"
   version = "3.18.1"
 
