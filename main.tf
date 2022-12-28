@@ -20,13 +20,17 @@ terraform {
       source  = "integrations/github"
       version = "5.12.0"
     }
+    helm = {
+      source  = "hashicorp/helm"
+      version = "2.8.0"
+    }
     kubernetes = {
       source  = "hashicorp/kubernetes"
       version = "2.16.1"
     }
-    helm = {
-      source  = "hashicorp/helm"
-      version = "2.8.0"
+    tls = {
+      source = "hashicorp/tls"
+      version = "4.0.4"
     }
   }
 }
@@ -57,7 +61,7 @@ provider "aws" {
 }
 
 provider "github" {
-  owner = "DevOpsExpansion"
+  owner = module.dotenv.result.GITHUB_OWNER
   token = module.dotenv.result.GITHUB_TOKEN
 }
 
