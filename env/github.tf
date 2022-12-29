@@ -37,4 +37,36 @@ resource "github_actions_secret" "server" {
   plaintext_value = each.value
 }
 
+# For GitHub paid plans
 
+# resource "github_repository_environment" "client" {
+#   environment = var.name
+#   repository = data.github_repository.client.name
+# }
+
+# resource "github_repository_environment" "server" {
+#   environment = var.name
+#   repository = data.github_repository.server.name
+# }
+
+# resource "github_actions_environment_secret" "client" {
+#     for_each = local.github_secrets.client
+
+#   repository = data.github_repository.client.name
+#   environment = github_repository_environment.client.environment
+
+
+#   secret_name     = each.key
+#   plaintext_value = each.value
+# }
+
+# resource "github_actions_environment_secret" "server" {
+#     for_each = local.github_secrets.server
+
+#   repository = data.github_repository.server.name
+#   environment = github_repository_environment.server.environment
+
+
+#   secret_name     = each.key
+#   plaintext_value = each.value
+# }

@@ -29,93 +29,93 @@ module "ingress" {
 #   dist = true
 # }
 
-module "prometheus" {
-  source = "./apps/monitoring/prometheus"
+# module "prometheus" {
+#   source = "./apps/monitoring/prometheus"
 
-  name          = "prometheus"
-  namespace     = "monitoring"
-  chart_version = "18.1.0"
+#   name          = "prometheus"
+#   namespace     = "monitoring"
+#   chart_version = "18.1.0"
 
-  values = yamlencode({
-    "prometheus-node-exporter" = {
-      # Not schedule a node exporter to t2.micro nodes,
-      # since it have litmited treshold for ENI
-      affinity = {
-        nodeAffinity = {
-          requiredDuringSchedulingIgnoredDuringExecution = {
-            nodeSelectorTerms = [{
-              matchExpressions = [{
-                key      = "node.kubernetes.io/instance-type"
-                operator = "NotIn"
-                values   = ["t2.micro"]
-              }]
-            }]
-          }
-        }
-      }
-    }
-    server = {
-      prefixURL = "/prometheus"
-      extraArgs = {
-        # For some reason this arg isn't added by helm
-        "web.external-url" = "http:/prometheus/"
-      }
-      ingress = {
-        enabled          = true
-        ingressClassName = "nginx"
-        hosts            = [module.ingress.alb_hostname]
-        path             = "/prometheus"
-      }
-      persistentVolume = {
-        storageClass = "gp2"
-      }
-    }
-  })
+#   values = yamlencode({
+#     "prometheus-node-exporter" = {
+#       # Not schedule a node exporter to t2.micro nodes,
+#       # since it have litmited treshold for ENI
+#       affinity = {
+#         nodeAffinity = {
+#           requiredDuringSchedulingIgnoredDuringExecution = {
+#             nodeSelectorTerms = [{
+#               matchExpressions = [{
+#                 key      = "node.kubernetes.io/instance-type"
+#                 operator = "NotIn"
+#                 values   = ["t2.micro"]
+#               }]
+#             }]
+#           }
+#         }
+#       }
+#     }
+#     server = {
+#       prefixURL = "/prometheus"
+#       extraArgs = {
+#         # For some reason this arg isn't added by helm
+#         "web.external-url" = "http:/prometheus/"
+#       }
+#       ingress = {
+#         enabled          = true
+#         ingressClassName = "nginx"
+#         hosts            = [module.ingress.alb_hostname]
+#         path             = "/prometheus"
+#       }
+#       persistentVolume = {
+#         storageClass = "gp2"
+#       }
+#     }
+#   })
 
-  dist = true
+#   dist = true
 
-  depends_on = [
-    module.ingress
-  ]
-}
+#   depends_on = [
+#     module.ingress
+#   ]
+# }
 
-module "grafana" {
-  source = "./apps/monitoring/grafana"
+# module "grafana" {
+#   source = "./apps/monitoring/grafana"
 
-  name          = "grafana"
-  namespace     = "monitoring"
-  chart_version = "6.43.1"
+#   name          = "grafana"
+#   namespace     = "monitoring"
+#   chart_version = "6.43.1"
 
-  values = yamlencode({
-    env = {
-      GF_SERVER_ROOT_URL            = "/grafana"
-      GF_SERVER_SERVE_FROM_SUB_PATH = "true"
-    }
-    ingress = {
-      enabled          = true
-      ingressClassName = "nginx"
-      annotations      = {}
-      hosts            = [module.ingress.alb_hostname]
-      path             = "/grafana"
-    }
-    datasources = {
-      "datasources.yaml" = {
-        apiVersion = 1
-        datasources = [{
-          name      = "Prometheus"
-          type      = "prometheus"
-          url       = "http://prometheus-server.monitoring.svc.cluster.local/prometheus"
-          access    = "proxy"
-          isDefault = true
-        }]
-      }
-    }
-  })
+#   values = yamlencode({
+#     env = {
+#       GF_SERVER_ROOT_URL            = "/grafana"
+#       GF_SERVER_SERVE_FROM_SUB_PATH = "true"
+#     }
+#     ingress = {
+#       enabled          = true
+#       ingressClassName = "nginx"
+#       annotations      = {}
+#       hosts            = [module.ingress.alb_hostname]
+#       path             = "/grafana"
+#     }
+#     datasources = {
+#       "datasources.yaml" = {
+#         apiVersion = 1
+#         datasources = [{
+#           name      = "Prometheus"
+#           type      = "prometheus"
+#           url       = "http://prometheus-server.monitoring.svc.cluster.local/prometheus"
+#           access    = "proxy"
+#           isDefault = true
+#         }]
+#       }
+#     }
+#   })
 
-  dist = true
+#   dist = true
 
-  depends_on = [
-    module.ingress,
-    module.prometheus
-  ]
-}
+#   depends_on = [
+#     module.ingress,
+#     module.prometheus
+#   ]
+# }

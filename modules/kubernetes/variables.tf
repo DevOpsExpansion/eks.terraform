@@ -9,3 +9,12 @@ variable "networking" {
     private_subnet_ids = list(string)
   })
 }
+
+variable "aws_auth_roles" {
+  type = list(object({
+    rolearn  = string
+    username = string
+    groups   = list(string)
+  }))
+  default = []
+}
