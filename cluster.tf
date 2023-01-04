@@ -8,9 +8,9 @@ module "cluster" {
     private_subnet_ids = module.vpc.private_subnets
   }
 
-  aws_auth_roles = [ {
-    rolearn = module.github.role_arn
+  aws_auth_roles = [{
+    rolearn  = module.github.role_arn
     username = "github"
-    groups = [ "system:masters" ]
-  } ]
+    groups   = ["system:masters"]
+  }]
 }

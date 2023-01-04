@@ -28,6 +28,10 @@ terraform {
       source  = "hashicorp/kubernetes"
       version = "2.16.1"
     }
+    mongodbatlas = {
+      source  = "mongodb/mongodbatlas"
+      version = "1.6.1"
+    }
     tls = {
       source  = "hashicorp/tls"
       version = "4.0.4"
@@ -35,11 +39,10 @@ terraform {
   }
 }
 
+
 provider "aws" {
-  region = local.aws_region
-  # profile    = local.aws_profile
-  access_key = module.dotenv.result.AWS_ACCESS_KEY_ID
-  secret_key = module.dotenv.result.AWS_SECRET_ACCESS_KEY
+  region  = local.aws_region
+  profile = local.aws_profile
 
   default_tags {
     tags = local.aws_default_tags
@@ -49,11 +52,9 @@ provider "aws" {
 # Created for ACM certificates
 # CloudFront supports US East (N. Virginia) Region only.
 provider "aws" {
-  region = local.aws_region
-  # profile    = local.aws_profile
-  access_key = module.dotenv.result.AWS_ACCESS_KEY_ID
-  secret_key = module.dotenv.result.AWS_SECRET_ACCESS_KEY
-  alias      = "virginia"
+  region  = local.aws_region
+  profile = local.aws_profile
+  alias   = "virginia"
 
   default_tags {
     tags = local.aws_default_tags
@@ -63,27 +64,6 @@ provider "aws" {
 provider "github" {
   owner = module.dotenv.result.GITHUB_OWNER
   token = module.dotenv.result.GITHUB_TOKEN
-}
-
-provider "kubernetes" {
-  host                   = module.cluster.cluster_endpoint
-  cluster_ca_certificate = base64decode(module.cluster.cluster_certificate_authority_data)
-
-  exec {
-    api_version = "client.authentication.k8s.io/v1beta1"
-    command     = "aws"
-    # This requires the awscli to be installed locally where Terraform is executed
-    args = [
-      "eks",
-      "get-token",
-      "--region",
-      local.aws_region,
-      "--profile",
-      local.aws_profile,
-      "--cluster-name",
-      module.cluster.cluster_name,
-    ]
-  }
 }
 
 provider "helm" {
@@ -107,6 +87,32 @@ provider "helm" {
       ]
     }
   }
+}
+
+provider "kubernetes" {
+  host                   = module.cluster.cluster_endpoint
+  cluster_ca_certificate = base64decode(module.cluster.cluster_certificate_authority_data)
+
+  exec {
+    api_version = "client.authentication.k8s.io/v1beta1"
+    command     = "aws"
+    # This requires the awscli to be installed locally where Terraform is executed
+    args = [
+      "eks",
+      "get-token",
+      "--region",
+      local.aws_region,
+      "--profile",
+      local.aws_profile,
+      "--cluster-name",
+      module.cluster.cluster_name,
+    ]
+  }
+}
+
+provider "mongodbatlas" {
+  public_key  = module.dotenv.result.MONGODB_ATLAS_PUBLIC_KEY
+  private_key = module.dotenv.result.MONGODB_ATLAS_PRIVATE_KEY
 }
 
 module "dotenv" {

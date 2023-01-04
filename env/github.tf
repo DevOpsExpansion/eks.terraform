@@ -1,13 +1,19 @@
 locals {
   github_secrets = {
     client = {
+      BASE_URL         = "api.cmcloudlab974.info"
       DISTRIBUTION_ID  = module.cloudfront.distribution_id
       S3_BUCKET_NAME   = module.frontend.s3_bucket_id
       S3_BUCKET_REGION = module.frontend.s3_bucket_region
 
     }
     server = {
-      ECR_REPOSITORY = split("/", module.ecr.repository_url)[1]
+      EKS_CLUSTER_NAME = var.cluster_name
+
+      ECR_REPOSITORY     = split("/", module.ecr.repository_url)[1]
+      ECR_REPOSITORY_URL = module.ecr.repository_url
+
+      AWS_SECRETS_ACCESS_ROLE_ARN = module.secrets.role_arn
     }
   }
 }

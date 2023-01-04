@@ -36,8 +36,11 @@ resource "github_actions_secret" "aws_assume_role_arn" {
 
 data "aws_iam_policy_document" "github" {
   statement {
-    effect    = "Allow"
-    actions   = ["cloudfront:CreateInvalidation"]
+    effect = "Allow"
+    actions = [
+      "cloudfront:CreateInvalidation",
+      "eks:DescribeCluster"
+    ]
     resources = ["*"]
   }
 }

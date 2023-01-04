@@ -9,12 +9,27 @@ module "autoscaler" {
   oidc_provider_arn = module.cluster.oidc_provider_arn
 }
 
+module "elb-controller" {
+  source = "./apps/balancing"
+
+  name = "aws-load-balancer-controller"
+
+  cluster_name      = module.cluster.cluster_name
+  oidc_provider_arn = module.cluster.oidc_provider_arn
+}
+
 module "ingress" {
   source = "./apps/nginx"
 
   name          = "nginx"
   namespace     = "ingress"
   chart_version = "4.4.0"
+}
+
+module "secrets" {
+  source = "./apps/secrets"
+
+  oidc_provider_arn = module.cluster.oidc_provider_arn
 }
 
 # module "efs_csi_driver" {
